@@ -3,13 +3,19 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import fs from "fs/promises"
 import path from "path"
+import type { UserData } from "@/types/user"
 
 const DATA_FILE = path.join(process.cwd(), "data", "users.json")
 
-async function getUserData(id: string) {
-  const data = await fs.readFile(DATA_FILE, "utf-8")
-  const users = JSON.parse(data)
-  return users.find((user: any) => user.id === id)
+async function getUserData(id: string): Promise<UserData | null> {
+  try {
+    const data = await fs.readFile(DATA_FILE, "utf-8")
+    const users = JSON.parse(data) as UserData[]
+    return users.find((user: UserData) => user.id === id) || null
+  } catch (error) {
+    console.error("Error reading user data:", error)
+    return null
+  }
 }
 
 export default async function EditUser({ params }: { params: { id: string } }) {
