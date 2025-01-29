@@ -18,7 +18,14 @@ async function getUserData(id: string): Promise<UserData | null> {
   }
 }
 
-export default async function EditUser({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: {
+    id: string
+  }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export default async function EditUser({ params, searchParams }: PageProps) {
   const userData = await getUserData(params.id)
 
   if (!userData) {
